@@ -20,7 +20,13 @@ end
 
 
 def right_guess(new_letter,new_hangman)
-  new_hangman.word[new_letter] = new_letter
+  new_hangman.word.map! do |letter|
+    if new_letter == letter[0]
+      [new_letter,new_letter]
+    else
+      [letter[0],letter[1]]
+    end
+  end
   puts "#{new_letter} is correct! Keep up the good work!"
 end
 
@@ -29,7 +35,7 @@ def wrong_guess(new_letter,new_hangman)
 end
 
 def right_wrong_guess(new_letter, new_hangman)
-    if new_hangman.word.keys.include?(new_letter)
+    if new_hangman.word.map{|letter| letter[0]}.include?(new_letter)
       right_guess(new_letter, new_hangman)
     else
       wrong_guess(new_letter, new_hangman)
@@ -37,13 +43,12 @@ def right_wrong_guess(new_letter, new_hangman)
 end
 
 def game_end?(new_hangman)
-  new_hangman.word.values.include?('_') &&
+  new_hangman.word.map{|letter| letter[1]}.include?('_') &&
   new_hangman.errors < Hangman.max_errors
 end
 
 def pre_game_starters
   #Builds the emptry tree, generates a random word, and creaets the guessing lines
-  Hangman.welcome
   new_hangman = Hangman.new
   new_hangman
 end

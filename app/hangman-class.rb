@@ -15,6 +15,7 @@ class Hangman
     @word = self.build_word_platform
     @letters_picked = []
     @errors = 0
+    self.levels_builder
     @@sum += 1
   end
 
@@ -65,6 +66,36 @@ class Hangman
     ]
   end
 
+  def levels_builder
+    #puts out some letters already, makes sure size appropriate as well
+
+    if self.level == 1
+      self.word.map! do |letters|
+        if /[aeiou]/.match(letters[0])
+          [letters[0],letters[0]]
+        else
+          letters
+        end
+      end
+    elsif self.level == 2
+      self.word.map! do |letters|
+        if /[rtslmn]/.match(letters[0])
+          [letters[0],letters[0]]
+        else
+          letters
+        end
+      end
+    elsif self.level == 3
+      self.word.map!.with_index do |letters, idx|
+        if (idx+1) % 3 == 0
+          [letters[0],letters[0]]
+        else
+          letters
+        end
+      end
+    end
+  end
+
   def random_word
     #retrieves random word from a dictionary
     if self.level < 5
@@ -76,7 +107,7 @@ class Hangman
       random_number = rand(0..new_page.length)
       new_page[random_number]
    else
-     Randomwords.nouns.next
+     RandomWordGenerator.word
    end
   end
 
@@ -98,15 +129,15 @@ class Hangman
   end
 
   def build_word_platform
-    word_platform = {}
+    word_platform = []
     word.chars.map do |letter|
-      word_platform[letter] = "_"
+      word_platform << [letter, "_"]
     end
     word_platform
   end
 
   def print_word_platform
-    puts self.word.values.join('')
+    puts self.word.map{|letters| letters[1]}.join('')
   end
 
   def add_part_to_tree(body_part)
@@ -138,14 +169,14 @@ class Hangman
   end
 
   def ending
-    if self.word.values == self.word.keys
+    if self.word.map {|letters| letters[0]} == self.word.map {|letters| letters[1]}
       puts "Congratulations! You win!!"
       self.class.wins += 1
     else
       system("clear")
       self.print_tree
       puts "Sorry you lost :("
-      puts "The word was: #{self.word.keys.join('')}"
+      puts "The word was: #{self.word.map{|letters| letters[0]}.join('')}"
       self.class.losses +=1
     end
   end
