@@ -1,7 +1,7 @@
 class Hangman
 
   attr_accessor :platform, :letters_picked, :errors
-  attr_accessor :word, :tree, :wins, :losses
+  attr_accessor :word, :tree, :wins, :losses, :level
 
   @@sum = 0
   @@all = []
@@ -10,7 +10,8 @@ class Hangman
 
   def initialize
     @tree = self.class.build_tree
-    @word = self.class.random_word
+    self.choose_level
+    @word = self.random_word
     @word = self.build_word_platform
     @letters_picked = []
     @errors = 0
@@ -56,15 +57,27 @@ class Hangman
      ["<", " ", ">"]]
   end
 
-  def self.random_word
+  def all_levels
+    ["http://www.gutenberg.org/cache/epub/46205/pg46205.txt",
+     "https://www.gutenberg.org/files/2591/2591-0.txt",
+     "https://www.gutenberg.org/files/11/11-0.txt",
+     "http://www.gutenberg.org/cache/epub/5200/pg5200.txt",
+    ]
+  end
+
+  def random_word
     #retrieves random word from a dictionary
-    url = "http://www.gutenberg.org/cache/epub/5200/pg5200.txt"
-    page = open(url) do |f|
-      page_string = f.read
-    end
-    new_page = page.downcase.gsub(/[\n]/i,' ').gsub(/[^a-z ]/i, '').split(' ')
-    random_number = rand(0..new_page.length)
-    new_page[random_number]
+    if self.level < 5
+      url = self.all_levels[self.level-1]
+      page = open(url) do |f|
+        page_string = f.read
+      end
+      new_page = page.downcase.gsub(/[\n]/i,' ').gsub(/[^a-z ]/i, '').split(' ')
+      random_number = rand(0..new_page.length)
+      new_page[random_number]
+   else
+     Randomwords.nouns.next
+   end
   end
 
   def self.build_tree
@@ -117,6 +130,11 @@ class Hangman
     puts "Welcome to Hangman by Colleen & Joe!!"
     puts "Let the games begin!"
     puts " "
+  end
+
+  def choose_level
+    puts "What level would you like to play (1 - 5)?"
+    self.level = gets.chomp.to_i
   end
 
   def ending

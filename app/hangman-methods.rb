@@ -43,8 +43,8 @@ end
 
 def pre_game_starters
   #Builds the emptry tree, generates a random word, and creaets the guessing lines
-  new_hangman = Hangman.new
   Hangman.welcome
+  new_hangman = Hangman.new
   new_hangman
 end
 
