@@ -68,6 +68,9 @@ class Hangman
 
   def levels_builder
     #puts out some letters already, makes sure size appropriate as well
+    #Level 1: Gets all the vowels
+    #Level 2: Gets 6 random letters
+    #Level 3: Gets every 3rd letter
 
     if self.level == 1
       self.word.map! do |letters|
@@ -80,15 +83,19 @@ class Hangman
       self.letters_picked << ["a","e","i","o","u","y"]
       self.letters_picked.flatten
     elsif self.level == 2
+      value = ''; 6.times{value  << (65 + rand(25)).chr.downcase}
       self.word.map! do |letters|
-        if /[rtslmn]/.match(letters[0])
+        if /[#{value}]/.match(letters[0])
           [letters[0],letters[0]]
         else
           letters
         end
       end
-      self.letters_picked << ["r","t","s","l","m","n"]
+      self.letters_picked = value.chars.uniq.map {|x| x}
       self.letters_picked.flatten
+      if self.word.map {|letters| letters[0]}.join('') == self.word.map {|letters| letters[1]}.join('')
+        self.word[0][1] = '_'
+      end
     elsif self.level == 3
       self.word.map!.with_index do |letters, idx|
         if (idx+1) % 3 == 0
