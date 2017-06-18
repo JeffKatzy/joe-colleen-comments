@@ -71,12 +71,14 @@ class Hangman
 
     if self.level == 1
       self.word.map! do |letters|
-        if /[aeiou]/.match(letters[0])
+        if /[aeiouy]/.match(letters[0])
           [letters[0],letters[0]]
         else
           letters
         end
       end
+      self.letters_picked << ["a","e","i","o","u","y"]
+      self.letters_picked.flatten
     elsif self.level == 2
       self.word.map! do |letters|
         if /[rtslmn]/.match(letters[0])
@@ -85,10 +87,13 @@ class Hangman
           letters
         end
       end
+      self.letters_picked << ["r","t","s","l","m","n"]
+      self.letters_picked.flatten
     elsif self.level == 3
       self.word.map!.with_index do |letters, idx|
         if (idx+1) % 3 == 0
           [letters[0],letters[0]]
+          self.letters_picked << letters[0]
         else
           letters
         end
@@ -170,7 +175,9 @@ class Hangman
 
   def ending
     if self.word.map {|letters| letters[0]} == self.word.map {|letters| letters[1]}
+      system("clear")
       puts "Congratulations! You win!!"
+      puts "The winning word you completed was: \'#{self.word.map{|letters| letters[0]}.join('')}\' & you only got #{self.errors} mistake(s)."
       self.class.wins += 1
     else
       system("clear")

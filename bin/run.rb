@@ -4,6 +4,7 @@ require_relative '../app/hangman-methods.rb'
 
 #Features to add: different levels & options to view different parts of games (wins/losses)
 
+system("clear")
 Hangman.welcome
 begin
   begin_game(pre_game_starters)
