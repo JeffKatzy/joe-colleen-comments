@@ -1,7 +1,8 @@
 class Hangman
 
   attr_accessor :platform, :letters_picked, :errors
-  attr_accessor :word, :tree, :wins, :losses, :level
+  attr_accessor :word, :tree, :wins, :losses, :level, :game_number
+  attr_accessor :user
 
   @@sum = 0
   @@all = []
@@ -17,6 +18,7 @@ class Hangman
     @errors = 0
     self.levels_builder
     @@sum += 1
+    self.game_number = @@sum
   end
 
   def self.sum
@@ -71,7 +73,7 @@ class Hangman
     #Level 1: Gets all the vowels
     #Level 2: Gets 6 random letters
     #Level 3: Gets every 3rd letter
-
+    idx=0
     if self.level == 1
       self.word.map! do |letters|
         if /[aeiouy]/.match(letters[0])
@@ -80,7 +82,7 @@ class Hangman
           letters
         end
       end
-      self.letters_picked << ["a","e","i","o","u","y"]
+      self.letters_picked = ["a","e","i","o","u","y"]
       self.letters_picked.flatten
     elsif self.level == 2
       value = ''; 6.times{value  << (65 + rand(25)).chr.downcase}
@@ -97,9 +99,10 @@ class Hangman
         self.word[0][1] = '_'
       end
     elsif self.level == 3
-      self.word.map!.with_index do |letters, idx|
+      self.word.each do |letters|
+        idx += 1
         if (idx+1) % 3 == 0
-          [letters[0],letters[0]]
+          letters[1] = letters[0]
           self.letters_picked << letters[0]
         else
           letters
@@ -176,8 +179,10 @@ class Hangman
   end
 
   def choose_level
-    puts "What level would you like to play (1 - 5)?"
-    self.level = gets.chomp.to_i
+    begin
+      puts "What level would you like to play (1 - 5)?"
+      self.level = gets.chomp.to_i
+    end while /[1-5]/.match(self.level.to_s).nil?
   end
 
   def ending

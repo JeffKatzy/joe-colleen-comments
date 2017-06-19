@@ -47,9 +47,10 @@ def game_end?(new_hangman)
   new_hangman.errors < Hangman.max_errors
 end
 
-def pre_game_starters
+def pre_game_starters(user)
   #Builds the emptry tree, generates a random word, and creaets the guessing lines
   new_hangman = Hangman.new
+  new_hangman.user = user
   new_hangman
 end
 
@@ -63,7 +64,6 @@ def play_again?
 end
 
 def goodbye!
-  system('clear')
   puts "For your records you won #{Hangman.wins} game(s) & lost #{Hangman.losses} game(s)."
   puts "We loved having you play CJ Hangman. Come again soon!"
 end
@@ -78,4 +78,34 @@ def begin_game(new_hangman)
   end while game_end?(new_hangman)
   Hangman.all << new_hangman
   new_hangman.ending
+end
+
+def show_history(user)
+  Hangman.all.each do |game|
+    if game.user_name = user
+      puts "Game # #{game.game_number}"
+      puts "Game Level: #{game.level}"
+      game.print_tree
+      if game.word.map {|letters| letters[1]} == game.word.map {|letters| letters[0]}
+        puts "The word: \'#{game.word.map {|letters| letters[0]}.join('')}\'"
+        puts "You won this round! :)"
+      else
+        puts game.word.map {|letters| letters[1]}.join('')
+        puts game.word.map {|letters| letters[0]}.join('')
+        puts "You lost this round :("
+      end
+      puts "\n"
+    end
+  end
+end
+
+def hangman_history(user)
+  system('clear')
+  begin
+    puts "Would you like to see your playing history?"
+    answer = gets.chomp
+  end until /[nyNY]/.match(answer)
+  if /[yY]/.match(answer)
+    show_history(user)
+  end
 end
