@@ -31,7 +31,7 @@ class User
   end
 
   def self.stats
-
+    
   end
 
 end
