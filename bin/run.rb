@@ -7,7 +7,11 @@ require_relative '../app/models/user-methods.rb'
 #Features to add: different levels & options to view different parts of games (wins/losses)
 
 system("clear")
-Welcome.home
-run_games
-view_stats
+begin
+  Welcome.home
+  option = player_options
+  run_games if option == 1
+  view_stats if option == 2
+  view_user_history if option == 3
+end while option != 4
 goodbye!

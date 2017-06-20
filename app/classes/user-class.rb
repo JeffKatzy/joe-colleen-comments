@@ -1,14 +1,29 @@
 class User
 
   attr_accessor :user_name, :hangman_history
-  @@all = []
 
   def initialize(user_name)
     @user_name = user_name
   end
 
+  def self.new_user?(user_name)
+    self.all.find do |user|
+      user_name == user.user_name
+    end
+  end
+
+  def self.new_or_existing(user_name)
+    if self.new_user?(user_name)
+      self.new_user?(user_name)
+    else
+      self.new(user_name)
+    end
+  end
+
   def self.all
-    @@all
+    Hangman.all.map do |game|
+      game.user
+    end.uniq
   end
 
   def save(hangman)
@@ -22,16 +37,20 @@ class User
     end
   end
 
-  def self.new_or_old_user(user_name)
-    if self.find_user(user_name)
-      self.find_user(user_name)
-    else
-      User.new(user_name)
+  def wins
+    sum = 0
+    Hangman.all.each do |game|
+      sum+=1 if self == game.user && game.win
     end
+    sum
   end
 
-  def self.stats
-    
+  def losses
+    sum = 0
+    Hangman.all.each do |game|
+      sum+=1 if self == game.user && !game.win
+    end
+    sum
   end
 
 end

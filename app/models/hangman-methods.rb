@@ -55,27 +55,25 @@ def pre_game_starters(user)
 end
 
 
-def play_again?
-  begin
-   puts "Would you like to play again?"
-   answer = gets.chomp
-  end until /[nyNY]/.match(answer)
-  /[yY]/.match(answer) ? true : false
+def main_game(new_hangman)
+  new_hangman.print_tree
+  new_hangman.print_word_platform
+  new_hangman.print_guessed_letters
+  new_letter = request_letter(new_hangman)
+  right_wrong_guess(new_letter, new_hangman)
 end
 
-def goodbye!
-  puts "For your records you won #{Stats.wins} game(s) & lost #{Stats.losses} game(s)."
-  puts "We loved having you play CJ Hangman. Come again soon!"
+def game_ending(new_hangman)
+  new_hangman.win= new_hangman.errors < Errors.max_errors
+  Hangman.all << new_hangman
+  Welcome.ending(new_hangman)
 end
+
 
 def begin_game(new_hangman)
   begin
     system("clear")
-    new_hangman.print_tree
-    new_hangman.print_word_platform
-    new_letter = request_letter(new_hangman)
-    right_wrong_guess(new_letter, new_hangman)
+    main_game(new_hangman)
   end while game_end?(new_hangman)
-  Hangman.all << new_hangman
-  Welcome.ending(new_hangman)
+  game_ending(new_hangman)
 end
