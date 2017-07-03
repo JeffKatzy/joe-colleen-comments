@@ -17,7 +17,9 @@ class Word
 
 
   def self.build_word_platform(level)
+    #
     word = self.random_word(level)
+    # NOTE sandwhich code.
     word_platform = []
     word.chars.map do |letter|
       word_platform << [letter, "_"]

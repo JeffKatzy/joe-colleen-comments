@@ -31,6 +31,8 @@ class Hangman
     self.errors +=1
     body_part = Errors.error_array[self.errors]
     Tree.add_part_to_tree(body_part,self)
+    # NOTE Try not to descrive with data structure name
+    
   end
 
 

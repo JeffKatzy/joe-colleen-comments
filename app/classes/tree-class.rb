@@ -1,5 +1,5 @@
 class Tree
-
+# NOTE very cool approach.
 
   def self.build_tree
     newtree = []

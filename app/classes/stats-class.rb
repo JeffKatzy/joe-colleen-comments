@@ -7,6 +7,7 @@ class Stats
 
   def self.users_with_ranks
     #create formula for ranking
+    # NOTE sandwhich code.
     user_ranking = {}
     User.all.each do |user|
       user_ranking[user.user_name] = user.wins - user.losses
@@ -32,12 +33,14 @@ class Stats
   def self.print_info_by_ranks
     self.stats_title
     self.users_by_ranks.map.with_index do |name, idx|
+      # 
       self.stats_align(name,User.find_user(name).wins,User.find_user(name).losses,idx+1)
     end
   end
 
   def self.all_info
     system('clear')
+     #
     User.all.each do |user|
       puts "#{user.user_name}: wins: #{user.wins} losses: #{user.losses}"
     end
